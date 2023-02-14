@@ -12,6 +12,8 @@
 JAVA_HOME=\path\to\jdk11
 # 设置Android SDK的环境变量
 ANDROID_SDK_ROOT=\path\to\sdkroot
+# 设置JAVA工具的环境变量
+JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
 ```
 
 #### 安装android命令行工具与AndroidSDK
