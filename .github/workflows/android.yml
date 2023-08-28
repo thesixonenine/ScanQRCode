@@ -25,11 +25,8 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: |
-        ./gradlew build -Dlint.baselines.continue=true
-        echo 'build success'
+        ./gradlew build
+        echo -e '\n\n\nBuild success\n\n\n'
         ./gradlew assembleRelease
-        echo ''
-        echo ''
-        echo ''
-        echo 'print outputs apk'
+        echo -e '\n\n\nRelease Success\n\n\n'
         ls ./app/build/outputs/apk/release
