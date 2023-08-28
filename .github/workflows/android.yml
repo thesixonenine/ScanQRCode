@@ -23,10 +23,22 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - name: Replace ENV
+      env:
+        RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+        RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+      run: |
+        sed -i '/^RELEASE_STORE_PASSWORD/d' gradle.properties
+        sed -i '/^RELEASE_KEY_ALIAS/d' gradle.properties
+        sed -i '/^RELEASE_KEY_PASSWORD/d' gradle.properties
+        
+        echo -e "RELEASE_STORE_PASSWORD=${RELEASE_KEY_PASSWORD}" >> gradle.properties
+        echo -e "RELEASE_KEY_ALIAS=${RELEASE_KEY_ALIAS}" >> gradle.properties
+        echo -e "RELEASE_KEY_PASSWORD=${RELEASE_KEY_PASSWORD}" >> gradle.properties
     - name: Build with Gradle
       run: |
         ./gradlew clean && ./gradlew build
         echo -e '\n\n\nBuild success\n\n\n'
-        ./gradlew assembleRelease
+        ./gradlew clean && ./gradlew assembleRelease
         echo -e '\n\n\nRelease Success\n\n\n'
         ls ./app/build/outputs/apk/release
