@@ -42,3 +42,7 @@ jobs:
         ./gradlew clean && ./gradlew assembleRelease
         echo -e '\n\n\nRelease Success\n\n\n'
         ls ./app/build/outputs/apk/release
+    - uses: actions/upload-artifact@v3
+      with:
+        name: app-release.apk
+        path: ./app/build/outputs/apk/release/app-release.apk
