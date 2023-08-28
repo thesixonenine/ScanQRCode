@@ -10,7 +10,7 @@
         android:layout_width="409dp"
         android:layout_height="70dp"
         android:onClick="onClickView"
-        android:text="重新扫描"
+        android:text="@string/rescan"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"

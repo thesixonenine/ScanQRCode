@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ScanQRCode</string>
+    <string name="rescan">重新扫描</string>
 </resources>
