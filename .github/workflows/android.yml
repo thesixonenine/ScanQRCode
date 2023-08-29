@@ -38,10 +38,7 @@ jobs:
     - name: Build with Gradle
       run: |
         # ./gradlew clean && ./gradlew build
-        # echo -e '\n\n\nBuild success\n\n\n'
         ./gradlew clean && ./gradlew assembleRelease
-        echo -e '\n\n\nRelease Success\n\n\n'
-        ls ./app/build/outputs/apk/release
     - uses: actions/upload-artifact@v3
       with:
         name: app-release.apk
