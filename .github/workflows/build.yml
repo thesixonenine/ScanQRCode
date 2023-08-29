@@ -1,4 +1,4 @@
-name: build
+name: Build CI
 
 on:
   workflow_dispatch:
@@ -19,7 +19,19 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: gradle
-    - name: Build with Gradle
+
+    - name: Replace ENV And Build with Gradle
+      env:
+        RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+        RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
       run: |
+        sed -i '/^RELEASE_STORE_PASSWORD/d' gradle.properties
+        sed -i '/^RELEASE_KEY_ALIAS/d' gradle.properties
+        sed -i '/^RELEASE_KEY_PASSWORD/d' gradle.properties
+        
+        echo -e "RELEASE_STORE_PASSWORD=${RELEASE_KEY_PASSWORD}" >> gradle.properties
+        echo -e "RELEASE_KEY_ALIAS=${RELEASE_KEY_ALIAS}" >> gradle.properties
+        echo -e "RELEASE_KEY_PASSWORD=${RELEASE_KEY_PASSWORD}" >> gradle.properties
+
         chmod +x gradlew
         ./gradlew clean && ./gradlew build
