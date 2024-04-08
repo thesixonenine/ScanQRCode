@@ -27,8 +27,8 @@ android {
             // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    lint {
-        disable 'TypographyFractions', 'TypographyQuotes'
+    lintOptions {
+        disable 'TypographyFractions','TypographyQuotes'
     }
 }
 
