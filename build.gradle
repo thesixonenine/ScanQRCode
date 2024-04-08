@@ -16,11 +16,11 @@ buildscript {
 
 allprojects {
     repositories {
-        maven {url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
         google()
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+//task clean(type: Delete) {
+//    delete getLayout().getBuildDirectory()
+//}
