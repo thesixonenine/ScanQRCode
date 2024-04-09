@@ -20,8 +20,8 @@ jobs:
         cache: gradle
     - name: Build with Gradle
       env:
-        RELEASE_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
-        RELEASE_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+        RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
       run: |
-        chmod +x ./gradlew
-        ./gradlew build -P RELEASE_STORE_PASSWORD=${RELEASE_PASSWORD} -P RELEASE_KEY_ALIAS=${RELEASE_ALIAS} -P RELEASE_KEY_PASSWORD=${RELEASE_PASSWORD}
+        chmod +x gradlew
+        gradlew build -P RELEASE_STORE_PASSWORD=${RELEASE_KEY_PASSWORD} -P RELEASE_KEY_ALIAS=${RELEASE_KEY_ALIAS} -P RELEASE_KEY_PASSWORD=${RELEASE_KEY_PASSWORD}
