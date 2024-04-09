@@ -42,13 +42,16 @@ sdkmanager --sdk_root="\path\to\sdkroot" "platforms;android-28"
 - 如果未设置Android SDK的环境变量, 则需要新增 `local.properties` 文件, 在文件中指定 `sdk.dir=\path\to\sdkroot`
 - 如果未设置JAVA版本为JDK17, 则修改 `gradle.properties` 文件, 在文件中指定 `org.gradle.java.home=\path\to\jdk17`
 
-#### 打包 APK
+#### 打包并签名 APK
 
 ```bash
-./gradlew assembleRelease
+# powershell
+gradle assembleRelease -P RELEASE_STORE_PASSWORD=${ENV:RELEASE_KEY_PASSWORD} -P RELEASE_KEY_ALIAS=${ENV:RELEASE_KEY_ALIAS} -P RELEASE_KEY_PASSWORD=${ENV:RELEASE_KEY_PASSWORD}
+# bash
+gradle assembleRelease -P RELEASE_STORE_PASSWORD=${RELEASE_KEY_PASSWORD} -P RELEASE_KEY_ALIAS=${RELEASE_KEY_ALIAS} -P RELEASE_KEY_PASSWORD=${RELEASE_KEY_PASSWORD}
 ```
 
-#### 签名 APK
+#### 手动签名 APK
 
 ```bash
 jarsigner -verbose -keystore \path\to\keystore\release.keystore -signedjar .\app\build\outputs\apk\release\app-release-signed.apk .\app\build\outputs\apk\release\app-release-unsigned.apk keystorealias

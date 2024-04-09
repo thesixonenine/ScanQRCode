@@ -25,6 +25,13 @@ android {
             signingConfig signingConfigs.release
             // 混淆规则配置
             // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all {
+                variant -> {
+                    variant.outputs.all {
+                        outputFileName = "ScanQRCode-release.apk"
+                    }
+                }
+            }
         }
     }
     lintOptions {
