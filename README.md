@@ -62,3 +62,9 @@ jarsigner -verbose -keystore \path\to\keystore\release.keystore -signedjar .\app
 ```bash
 keytool -list -v -keystore .\app\keystore\release.keystore
 ```
+
+#### 查看 Action 运行日志
+
+```bash
+gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/thesixonenine/ScanQRCode/actions/runs --paginate --jq '.workflow_runs[] | select(.conclusion != "") | .id'
+```
