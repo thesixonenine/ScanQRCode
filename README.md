@@ -56,3 +56,9 @@ gradle assembleRelease -P RELEASE_STORE_PASSWORD=${RELEASE_KEY_PASSWORD} -P RELE
 ```bash
 jarsigner -verbose -keystore \path\to\keystore\release.keystore -signedjar .\app\build\outputs\apk\release\app-release-signed.apk .\app\build\outputs\apk\release\app-release-unsigned.apk keystorealias
 ```
+
+#### 查看 keystore
+
+```bash
+keytool -list -v -keystore .\app\keystore\release.keystore
+```
