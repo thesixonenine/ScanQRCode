@@ -10,28 +10,27 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: gradle
-
     - name: Replace ENV And Build with Gradle
       env:
         RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
         RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
       run: |
-        sed -i '/^RELEASE_STORE_PASSWORD/d' gradle.properties
-        sed -i '/^RELEASE_KEY_ALIAS/d' gradle.properties
-        sed -i '/^RELEASE_KEY_PASSWORD/d' gradle.properties
+        #sed -i '/^RELEASE_STORE_PASSWORD/d' gradle.properties
+        #sed -i '/^RELEASE_KEY_ALIAS/d' gradle.properties
+        #sed -i '/^RELEASE_KEY_PASSWORD/d' gradle.properties
         
-        echo -e "RELEASE_STORE_PASSWORD=${RELEASE_KEY_PASSWORD}" >> gradle.properties
-        echo -e "RELEASE_KEY_ALIAS=${RELEASE_KEY_ALIAS}" >> gradle.properties
-        echo -e "RELEASE_KEY_PASSWORD=${RELEASE_KEY_PASSWORD}" >> gradle.properties
+        #echo -e "RELEASE_STORE_PASSWORD=${RELEASE_KEY_PASSWORD}" >> gradle.properties
+        #echo -e "RELEASE_KEY_ALIAS=${RELEASE_KEY_ALIAS}" >> gradle.properties
+        #echo -e "RELEASE_KEY_PASSWORD=${RELEASE_KEY_PASSWORD}" >> gradle.properties
 
-        chmod +x gradlew
-        ./gradlew clean && ./gradlew build
+        chmod +x ./gradlew
+        ./gradlew clean 
+        ./gradlew build -P RELEASE_STORE_PASSWORD=${RELEASE_KEY_PASSWORD} -P RELEASE_KEY_ALIAS=${RELEASE_KEY_ALIAS} -P RELEASE_KEY_PASSWORD=${RELEASE_KEY_PASSWORD}
