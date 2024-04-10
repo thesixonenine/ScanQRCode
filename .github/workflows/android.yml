@@ -33,6 +33,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       # if: startsWith(github.ref, 'refs/tags/')
       with:
+        tag_name: v1.0.0
         files: ./app/build/outputs/apk/release/ScanQRCode-release.apk
         name: Release
         body: 这是第一次发布Release.
