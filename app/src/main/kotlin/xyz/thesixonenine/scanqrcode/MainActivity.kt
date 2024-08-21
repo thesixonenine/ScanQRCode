@@ -25,11 +25,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         textView = findViewById<View>(R.id.textView) as TextView
         val integrator = IntentIntegrator(this)
-        // 设置要扫描的条码类型，ONE_D_CODE_TYPES：一维码，QR_CODE_TYPES-二维码
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
+        // 设置要扫描的条码类型, ONE_D_CODE_TYPES: 一维码, QR_CODE_TYPES: 二维码
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
         integrator.setPrompt("扫描条形码")
-        integrator.setCameraId(0) // 使用默认的相机
-        integrator.setBeepEnabled(false) // 扫到码后播放提示音
+        // 使用默认的相机
+        integrator.setCameraId(0)
+        // 扫到码后播放提示音
+        integrator.setBeepEnabled(false)
         integrator.setCaptureActivity(ScanActivity::class.java)
         integrator.initiateScan()
     }
