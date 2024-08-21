@@ -3,7 +3,7 @@ apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
     namespace "xyz.thesixonenine.scanqrcode"
-    compileSdk 28
+    compileSdk 34
     defaultConfig {
         applicationId "xyz.thesixonenine.scanqrcode"
         minSdkVersion 24
