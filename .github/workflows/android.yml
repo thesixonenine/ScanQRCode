@@ -28,6 +28,7 @@ jobs:
         RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
       run: |
         find . -type f -name "*.gradle" -exec sed -i '/aliyun/d' {} +
+        find . -type f -name "*.gradle" -exec sed -i '/tencent/d' {} +
         find . -name 'gradle-wrapper.properties' -exec sed -i 's/mirrors\.cloud\.tencent\.com\/gradle/services.gradle.org\/distributions/g' {} +
         chmod +x ./gradlew
         ./gradlew assembleRelease -P RELEASE_STORE_PASSWORD=${RELEASE_KEY_PASSWORD} -P RELEASE_KEY_ALIAS=${RELEASE_KEY_ALIAS} -P RELEASE_KEY_PASSWORD=${RELEASE_KEY_PASSWORD}
