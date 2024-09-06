@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package xyz.thesixonenine.scanqrcode
 
 import android.Manifest
@@ -12,10 +10,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.google.zxing.integration.android.IntentIntegrator
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanIntentResult
+import com.journeyapps.barcodescanner.ScanOptions
+
 
 class MainActivity : AppCompatActivity() {
     private var textView: TextView? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val permissions = arrayOf(
@@ -27,22 +29,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         textView = findViewById<View>(R.id.textView) as TextView
-        val integrator = IntentIntegrator(this)
-        // 设置要扫描的条码类型, ONE_D_CODE_TYPES: 一维码, QR_CODE_TYPES: 二维码
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
-        integrator.setPrompt("请扫描二维码/条形码")
-        // 使用默认的相机
-        integrator.setCameraId(0)
-        // 扫到码后播放提示音
-        integrator.setBeepEnabled(false)
-        integrator.setCaptureActivity(ScanActivity::class.java)
-        integrator.initiateScan()
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-        if (result != null) {
+        val barcodeLauncher = registerForActivityResult(ScanContract()) { result: ScanIntentResult ->
             val contents = result.contents
             if (contents == null) {
                 Toast.makeText(this, "扫码取消", Toast.LENGTH_LONG).show()
@@ -50,10 +37,17 @@ class MainActivity : AppCompatActivity() {
                 textView!!.text = contents
                 Toast.makeText(this, "扫描内容: $contents", Toast.LENGTH_LONG).show()
             }
-        } else {
-            // This is important, otherwise the result will not be passed to the fragment
-            super.onActivityResult(requestCode, resultCode, data)
         }
+        val options = ScanOptions()
+        // 设置要扫描的条码类型, ONE_D_CODE_TYPES: 一维码, QR_CODE_TYPES: 二维码
+        options.setDesiredBarcodeFormats(ScanOptions.ALL_CODE_TYPES)
+        options.setPrompt("请扫描二维码/条形码")
+        // 使用默认的相机
+        options.setCameraId(0)
+        // 扫到码后播放提示音
+        options.setBeepEnabled(false)
+        options.setCaptureActivity(ScanActivity::class.java)
+        barcodeLauncher.launch(options)
     }
 
     fun onClickView(v: View?) {

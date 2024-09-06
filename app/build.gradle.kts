@@ -49,7 +49,8 @@ android {
         jvmTarget = "17"
     }
     lint {
-        disable += "TypographyFractions" + "TypographyQuotes"
+        disable += "TypographyFractions"
+        disable += "TypographyQuotes"
         abortOnError = false
     }
 }
