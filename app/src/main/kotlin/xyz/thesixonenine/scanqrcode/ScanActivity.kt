@@ -1,10 +1,13 @@
 package xyz.thesixonenine.scanqrcode
 
-import android.os.Bundle
 import com.journeyapps.barcodescanner.CaptureActivity
+import com.journeyapps.barcodescanner.DecoratedBarcodeView
+
 
 class ScanActivity : CaptureActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+
+    override fun initializeContent(): DecoratedBarcodeView {
+        setContentView(R.layout.activity_scan);
+        return findViewById(R.id.zxing_barcode_scanner)
     }
 }

@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         val options = ScanOptions()
         // 设置要扫描的条码类型, ONE_D_CODE_TYPES: 一维码, QR_CODE_TYPES: 二维码
         options.setDesiredBarcodeFormats(ScanOptions.ALL_CODE_TYPES)
-        options.setPrompt("请扫描二维码/条形码")
+        options.setPrompt("请扫描二维码/条形码\n\n\n")
         // 使用默认的相机
         options.setCameraId(0)
         // 扫到码后播放提示音
