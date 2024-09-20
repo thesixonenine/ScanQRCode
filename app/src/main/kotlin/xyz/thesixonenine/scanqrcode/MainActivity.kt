@@ -56,8 +56,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onClickCopy(v: View?) {
-        // 从API11开始android推荐使用android.content.ClipboardManager
-        // 为了兼容低版本我们这里使用旧版的android.text.ClipboardManager, 虽然提示deprecated, 但不影响使用
         val cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         cm.setPrimaryClip(ClipData.newPlainText("text", textView!!.text))
         Toast.makeText(this, "已复制", Toast.LENGTH_LONG).show()
