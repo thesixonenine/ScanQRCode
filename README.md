@@ -42,6 +42,10 @@ sdkmanager --sdk_root="\path\to\sdkroot" "platforms;android-28"
 - 如果未设置Android SDK的环境变量, 则需要新增 `local.properties` 文件, 在文件中指定 `sdk.dir=\path\to\sdkroot`
 - 如果未设置JAVA版本为JDK17, 则修改 `gradle.properties` 文件, 在文件中指定 `org.gradle.java.home=\path\to\jdk17`
 
+#### 升级 AGP 和 Gradle
+
+[版本对应](https://developer.android.com/build/releases/gradle-plugin#updating-gradle)
+
 #### 打包并签名 APK
 
 ```bash
