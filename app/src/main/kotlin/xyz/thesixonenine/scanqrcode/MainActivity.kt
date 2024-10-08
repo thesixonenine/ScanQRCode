@@ -20,12 +20,13 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val permissions = arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.VIBRATE,
+        ActivityCompat.requestPermissions(
+            this, arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.VIBRATE,
+            ), 100
         )
-        ActivityCompat.requestPermissions(this, permissions, 100)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         textView = findViewById<View>(R.id.textView) as TextView
