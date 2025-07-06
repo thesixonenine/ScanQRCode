@@ -85,6 +85,8 @@ cd ScanQRCode
 
 `JAVA_HOME` `ANDROID_HOME` `JAVA_TOOL_OPTIONS`
 
+[环境变量配置命令参考](https://blog.thesixonenine.site/p/windows/#环境变量配置)
+
 ```bash
 # 设置 JAVA 版本为 JDK17
 JAVA_HOME="\path\to\jdk17"
@@ -92,33 +94,6 @@ JAVA_HOME="\path\to\jdk17"
 ANDROID_HOME="\path\to\sdkroot"
 # 设置 JAVA 工具的环境变量(可选)
 JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
-
-# 附:
-# CMD 查看环境变量
-echo %USERPROFILE%
-
-# CMD 设置会话级环境变量
-set JAVA_HOME="\path\to\jdk"
-# CMD 设置用户级环境变量
-setx JAVA_HOME "\path\to\jdk"
-# CMD 设置系统级环境变量
-setx JAVA_HOME "\path\to\jdk" /M
-
-# PowerShell 查看环境变量
-$env:JAVA_HOME
-# 或者
-[System.Environment]::GetEnvironmentVariable("JAVA_HOME")
-[System.Environment]::GetEnvironmentVariable("JAVA_HOME", "Process")
-
-
-# PowerShell 设置会话级环境变量
-$env:JAVA_HOME="\path\to\jdk"
-# 或者
-[System.Environment]::SetEnvironmentVariable("JAVA_HOME", "\path\to\jdk", "Process")
-# PowerShell 设置用户级环境变量
-[System.Environment]::SetEnvironmentVariable("JAVA_HOME", "\path\to\jdk", "User")
-# PowerShell 设置会话级环境变量
-[System.Environment]::SetEnvironmentVariable("JAVA_HOME", "\path\to\jdk", "Machine")
 ```
 
 #### 安装 Android 命令行工具与 Android SDK
