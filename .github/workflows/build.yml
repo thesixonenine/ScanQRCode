@@ -31,4 +31,5 @@ jobs:
         ./gradlew assembleRelease -P RELEASE_STORE_PASSWORD=${RELEASE_KEY_PASSWORD} -P RELEASE_KEY_ALIAS=${RELEASE_KEY_ALIAS} -P RELEASE_KEY_PASSWORD=${RELEASE_KEY_PASSWORD}
     - uses: actions/upload-artifact@v4
       with:
+        name: ScanQRCode-Release-APK.zip
         path: ./app/build/outputs/apk/release/*.apk
