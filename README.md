@@ -4,44 +4,45 @@
 [![Android CI](https://github.com/thesixonenine/ScanQRCode/actions/workflows/android.yml/badge.svg?branch=master)](https://github.com/thesixonenine/ScanQRCode/actions/workflows/android.yml)
 
 
-扫描并识别二维码
+Scanning and recognizing QR code, Barcode.
 
 
-## Windows 构建流程
+## Windows Build
 
-### PowerShell 命令行配置构建环境
+### PowerShell Configure Environment
 
-#### 配置 ANDROID_HOME 并同意协议
+#### Configure ANDROID_HOME
 
 ```powershell
 # https://developer.android.google.cn/tools/sdkmanager?hl=zh-cn
-# 指定 ANDROID_HOME 目录并进入
+# use special ANDROID_HOME
 # mkdir $env:USERPROFILE/Android/Sdk/cmdline-tools
 # cd $env:USERPROFILE/Android/Sdk
-# 默认 ANDROID_HOME 目录并进入
+
+# use default ANDROID_HOME
 mkdir $env:LOCALAPPDATA/Android/Sdk/cmdline-tools
 cd $env:LOCALAPPDATA/Android/Sdk
 
-# 配置环境变量 ANDROID_HOME
+# configure ANDROID_HOME
 [System.Environment]::SetEnvironmentVariable("ANDROID_HOME", (Get-Location).Path, "USER")
 
-# 配置 cmdline-tools
+# configure cmdline-tools
 cd cmdline-tools
 Start-BitsTransfer -Source "https://googledownloads.cn/android/repository/commandlinetools-win-13114758_latest.zip" -Destination "commandlinetools.zip"
 tar -xf commandlinetools.zip
 Rename-Item ./cmdline-tools ./latest
 
-# 配置 sdkmanager 工具到 PATH
+# add sdkmanager to PATH
 [System.Environment]::SetEnvironmentVariable("PATH", "$([System.IO.Path]::Combine([System.Environment]::GetEnvironmentVariable('ANDROID_HOME', 'User'), 'cmdline-tools\latest\bin'));$([System.Environment]::GetEnvironmentVariable('PATH', 'User'))", "User")
 [System.Environment]::SetEnvironmentVariable("PATH", "$([System.IO.Path]::Combine([System.Environment]::GetEnvironmentVariable('ANDROID_HOME', 'User'), 'platform-tools'));$([System.Environment]::GetEnvironmentVariable('PATH', 'User'))", "User")
-# 新开 PowerShell 窗口并同意协议
+# open new PowerShell window and accept licenses
 1..10 | ForEach-Object { echo "y" } | sdkmanager --licenses
 
-# 检查版本
+# check sdkmanager version
 sdkmanager --version
 ```
 
-**配置 Android Sdk 镜像地址(国内可选)**
+**Configure Android Sdk Mirror(for China)**
 
 ```powershell
 mkdir $env:USERPROFILE/.android
@@ -49,10 +50,10 @@ cd $env:USERPROFILE/.android
 echo "proxy=http`nproxy_host=mirrors.cloud.tencent.com`nproxy_port=443`nno_https=false" > ./repositories.cfg
 ```
 
-#### 配置 JAVA_HOME
+#### Configure JAVA_HOME
 
 ```powershell
-# 配置 JAVA_HOME
+# configure JAVA_HOME
 mkdir $env:USERPROFILE/Java
 cd $env:USERPROFILE/Java
 Start-BitsTransfer -Source "https://mirror.tuna.tsinghua.edu.cn/Adoptium/17/jdk/x64/windows/OpenJDK17U-jdk_x64_windows_hotspot_17.0.15_6.zip" -Destination "jdk.zip"
@@ -62,64 +63,64 @@ cd 17
 [System.Environment]::SetEnvironmentVariable("JAVA_HOME", (Get-Location).Path, "USER")
 [System.Environment]::SetEnvironmentVariable("PATH", "$([System.IO.Path]::Combine([System.Environment]::GetEnvironmentVariable('JAVA_HOME', 'User'), 'bin'));$([System.Environment]::GetEnvironmentVariable('PATH', 'User'))", "User")
 
-# 检查版本
+# check java version
 java -version
 ```
 
-#### 拉取代码并构建 APK
+#### Build APK
 
 ```powershell
-# 拉取代码并构建 APK
+# pull and build APK
 mkdir $env:USERPROFILE/github
 cd $env:USERPROFILE/github
 git clone git@github.com:thesixonenine/ScanQRCode.git
 cd ScanQRCode
 ./gradlew assembleRelease -P RELEASE_STORE_PASSWORD=${ENV:RELEASE_KEY_PASSWORD} -P RELEASE_KEY_ALIAS=${ENV:RELEASE_KEY_ALIAS} -P RELEASE_KEY_PASSWORD=${ENV:RELEASE_KEY_PASSWORD}
-# 或者指定 JAVA_HOME
+# use special JAVA_HOME
 # -D org.gradle.java.home="C:\Program Files\Java\jdk-17"
 ```
 
-### 详细配置
+### Configure
 
-#### 设置环境变量
+#### Configure Environment
 
 `JAVA_HOME` `ANDROID_HOME` `JAVA_TOOL_OPTIONS`
 
-[环境变量配置命令参考](https://blog.thesixonenine.site/p/windows/#环境变量配置)
+[Configure Environment References](https://blog.thesixonenine.site/p/windows/#configure-environment)
 
 ```bash
-# 设置 JAVA 版本为 JDK17
+# configure JAVA_HOME
 JAVA_HOME="\path\to\jdk17"
-# 设置 ANDROID_HOME 的环境变量
+# configure ANDROID_HOME
 ANDROID_HOME="\path\to\sdkroot"
-# 设置 JAVA 工具的环境变量(可选)
+# Optional
 JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
 ```
 
-#### 安装 Android 命令行工具与 Android SDK
+#### Install Android cmdline-tools And Android SDK
 
-安装命令行工具
+Install cmdline-tools
 
 ```bash
 scoop install main/android-clt
 ```
 
-安装 Android SDK
+Install Android SDK
 
 ```bash
 sdkmanager --sdk_root="\path\to\sdkroot" "platforms;android-28"
 ```
 
-#### 环境指定
+#### Configure Environment
 
-- 如果未设置Android SDK的环境变量, 则需要新增 `local.properties` 文件, 在文件中指定 `sdk.dir=\path\to\sdkroot`
-- 如果未设置JAVA版本为JDK17, 则修改 `gradle.properties` 文件, 在文件中指定 `org.gradle.java.home=\path\to\jdk17`
+- If you have not set the `ANDROID_HOME` environment variable, add `sdk.dir=\path\to\sdkroot` to the `local.properties` file.
+- If you have not set the `JAVA_HOME` environment variable, add `org.gradle.java.home=\path\to\jdk17` to the `gradle.properties` file.
 
-#### 升级 AGP 和 Gradle
+#### Upgrade AGP And Gradle
 
-[版本对应](https://developer.android.com/build/releases/gradle-plugin#updating-gradle)
+[Correspond Versions](https://developer.android.com/build/releases/gradle-plugin#updating-gradle)
 
-#### 打包并签名 APK
+#### Build And Sign APK
 
 ```bash
 # powershell
@@ -128,19 +129,19 @@ sdkmanager --sdk_root="\path\to\sdkroot" "platforms;android-28"
 ./gradlew assembleRelease -P RELEASE_STORE_PASSWORD=${RELEASE_KEY_PASSWORD} -P RELEASE_KEY_ALIAS=${RELEASE_KEY_ALIAS} -P RELEASE_KEY_PASSWORD=${RELEASE_KEY_PASSWORD}
 ```
 
-#### 手动签名 APK
+#### Sign APK
 
 ```bash
 jarsigner -verbose -keystore \path\to\keystore\release.keystore -signedjar .\app\build\outputs\apk\release\app-release-signed.apk .\app\build\outputs\apk\release\app-release-unsigned.apk keystorealias
 ```
 
-#### 查看 keystore
+#### View Keystore
 
 ```bash
 keytool -list -v -keystore .\app\keystore\release.keystore
 ```
 
-#### 查看 Action 运行日志
+#### View Action Logs
 
 ```bash
 gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/thesixonenine/ScanQRCode/actions/runs --paginate --jq '.workflow_runs[] | select(.conclusion != "") | .id'

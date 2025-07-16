@@ -12,8 +12,16 @@ android {
         applicationId = "xyz.thesixonenine.scanqrcode"
         minSdk = 26
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.0.3"
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
+    }
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("x86", "x86_64", "armeabi-v7a", "arm64-v8a")
+            isUniversalApk = true
+        }
     }
     signingConfigs {
         create("release") {
@@ -31,11 +39,10 @@ android {
             // 混淆规则配置
             // proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             applicationVariants.all {
+                val variant = this
                 outputs.all {
                     if (this is ApkVariantOutputImpl) {
-                        // ScanQRCode-debug.apk
-                        // ScanQRCode-release.apk
-                        this.outputFileName = "${project.parent?.name}-${this.name}.apk"
+                        outputFileName = outputFileName.replaceFirst(project.name, project.parent?.name + "-" + variant.versionName, false)
                     }
                 }
             }
