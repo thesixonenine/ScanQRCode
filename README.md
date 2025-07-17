@@ -7,14 +7,21 @@
 Scanning and recognizing QR code, Barcode.
 
 
-## Windows Build
+## Build with PowerShell on Windows
 
-### PowerShell Configure Environment
+### Environment Variables
 
-#### Configure ANDROID_HOME
+[Configure Environment References](https://blog.thesixonenine.site/p/windows/#configure-environment)
+
+- ANDROID_HOME
+- JAVA_HOME
+
+### ANDROID_HOME
+
+#### Manual
 
 ```powershell
-# https://developer.android.google.cn/tools/sdkmanager?hl=zh-cn
+# https://developer.android.com/tools/sdkmanager
 # use special ANDROID_HOME
 # mkdir $env:USERPROFILE/Android/Sdk/cmdline-tools
 # cd $env:USERPROFILE/Android/Sdk
@@ -26,9 +33,12 @@ cd $env:LOCALAPPDATA/Android/Sdk
 # configure ANDROID_HOME
 [System.Environment]::SetEnvironmentVariable("ANDROID_HOME", (Get-Location).Path, "USER")
 
+# https://developer.android.com/studio#command-line-tools-only
 # configure cmdline-tools
 cd cmdline-tools
-Start-BitsTransfer -Source "https://googledownloads.cn/android/repository/commandlinetools-win-13114758_latest.zip" -Destination "commandlinetools.zip"
+Start-BitsTransfer -Source "https://dl.google.com/android/repository/commandlinetools-win-13114758_latest.zip" -Destination "commandlinetools.zip"
+# for china
+# Start-BitsTransfer -Source "https://googledownloads.cn/android/repository/commandlinetools-win-13114758_latest.zip" -Destination "commandlinetools.zip"
 tar -xf commandlinetools.zip
 Rename-Item ./cmdline-tools ./latest
 
@@ -42,7 +52,14 @@ Rename-Item ./cmdline-tools ./latest
 sdkmanager --version
 ```
 
-**Configure Android Sdk Mirror(for China)**
+#### Scoop
+
+```bash
+scoop install main/android-clt
+sdkmanager --sdk_root="/path/to/sdkroot" "platforms;android-28"
+```
+
+#### Android Sdk Mirror(for China)
 
 ```powershell
 mkdir $env:USERPROFILE/.android
@@ -50,13 +67,15 @@ cd $env:USERPROFILE/.android
 echo "proxy=http`nproxy_host=mirrors.cloud.tencent.com`nproxy_port=443`nno_https=false" > ./repositories.cfg
 ```
 
-#### Configure JAVA_HOME
+### JAVA_HOME
 
 ```powershell
 # configure JAVA_HOME
 mkdir $env:USERPROFILE/Java
 cd $env:USERPROFILE/Java
-Start-BitsTransfer -Source "https://mirror.tuna.tsinghua.edu.cn/Adoptium/17/jdk/x64/windows/OpenJDK17U-jdk_x64_windows_hotspot_17.0.15_6.zip" -Destination "jdk.zip"
+Start-BitsTransfer -Source "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.15%2B6/OpenJDK17U-jdk_x64_windows_hotspot_17.0.15_6.zip" -Destination "jdk.zip"
+# for china
+# https://mirror.tuna.tsinghua.edu.cn/Adoptium/17/jdk/x64/windows/OpenJDK17U-jdk_x64_windows_hotspot_17.0.15_6.zip
 tar -xf jdk.zip
 Rename-Item ./jdk-17.0.15+6 ./17
 cd 17
@@ -67,7 +86,13 @@ cd 17
 java -version
 ```
 
-#### Build APK
+#### use properties file replace environment variable
+
+> - If you have not set the `ANDROID_HOME` environment variable, add `sdk.dir=/path/to/sdkroot` to the `local.properties` file.
+> - If you have not set the `JAVA_HOME` environment variable, add `org.gradle.java.home=/path/to/jdk17` to the `gradle.properties` file.
+
+
+### Build APK
 
 ```powershell
 # pull and build APK
@@ -75,74 +100,30 @@ mkdir $env:USERPROFILE/github
 cd $env:USERPROFILE/github
 git clone git@github.com:thesixonenine/ScanQRCode.git
 cd ScanQRCode
-./gradlew assembleRelease -P RELEASE_STORE_PASSWORD=${ENV:RELEASE_KEY_PASSWORD} -P RELEASE_KEY_ALIAS=${ENV:RELEASE_KEY_ALIAS} -P RELEASE_KEY_PASSWORD=${ENV:RELEASE_KEY_PASSWORD}
+./gradlew assembleRelease -P RELEASE_STORE_PASSWORD=$env:RELEASE_KEY_PASSWORD -P RELEASE_KEY_ALIAS=$env:RELEASE_KEY_ALIAS -P RELEASE_KEY_PASSWORD=$env:RELEASE_KEY_PASSWORD
 # use special JAVA_HOME
 # -D org.gradle.java.home="C:\Program Files\Java\jdk-17"
+
+# bash
+./gradlew assembleRelease -P RELEASE_STORE_PASSWORD=${RELEASE_KEY_PASSWORD} -P RELEASE_KEY_ALIAS=${RELEASE_KEY_ALIAS} -P RELEASE_KEY_PASSWORD=${RELEASE_KEY_PASSWORD}
+# cmd
+./gradlew assembleRelease -P RELEASE_STORE_PASSWORD=%RELEASE_KEY_PASSWORD% -P RELEASE_KEY_ALIAS=%RELEASE_KEY_ALIAS% -P RELEASE_KEY_PASSWORD=%RELEASE_KEY_PASSWORD%
 ```
 
-### Configure
-
-#### Configure Environment
-
-`JAVA_HOME` `ANDROID_HOME` `JAVA_TOOL_OPTIONS`
-
-[Configure Environment References](https://blog.thesixonenine.site/p/windows/#configure-environment)
-
-```bash
-# configure JAVA_HOME
-JAVA_HOME="\path\to\jdk17"
-# configure ANDROID_HOME
-ANDROID_HOME="\path\to\sdkroot"
-# Optional
-JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
-```
-
-#### Install Android cmdline-tools And Android SDK
-
-Install cmdline-tools
-
-```bash
-scoop install main/android-clt
-```
-
-Install Android SDK
-
-```bash
-sdkmanager --sdk_root="\path\to\sdkroot" "platforms;android-28"
-```
-
-#### Configure Environment
-
-- If you have not set the `ANDROID_HOME` environment variable, add `sdk.dir=\path\to\sdkroot` to the `local.properties` file.
-- If you have not set the `JAVA_HOME` environment variable, add `org.gradle.java.home=\path\to\jdk17` to the `gradle.properties` file.
-
-#### Upgrade AGP And Gradle
+## Upgrade AGP And Gradle
 
 [Correspond Versions](https://developer.android.com/build/releases/gradle-plugin#updating-gradle)
 
-#### Build And Sign APK
+
+## Other Command
 
 ```bash
-# powershell
-./gradlew assembleRelease -P RELEASE_STORE_PASSWORD=${ENV:RELEASE_KEY_PASSWORD} -P RELEASE_KEY_ALIAS=${ENV:RELEASE_KEY_ALIAS} -P RELEASE_KEY_PASSWORD=${ENV:RELEASE_KEY_PASSWORD}
-# bash
-./gradlew assembleRelease -P RELEASE_STORE_PASSWORD=${RELEASE_KEY_PASSWORD} -P RELEASE_KEY_ALIAS=${RELEASE_KEY_ALIAS} -P RELEASE_KEY_PASSWORD=${RELEASE_KEY_PASSWORD}
-```
+# Manual Sign APK
+jarsigner -verbose -keystore /path/to/keystore/release.keystore -signedjar ./app/build/outputs/apk/release/app-release-signed.apk ./app/build/outputs/apk/release/app-release-unsigned.apk keystorealias
 
-#### Sign APK
+# View Keystore
+keytool -list -v -keystore ./app/keystore/release.keystore
 
-```bash
-jarsigner -verbose -keystore \path\to\keystore\release.keystore -signedjar .\app\build\outputs\apk\release\app-release-signed.apk .\app\build\outputs\apk\release\app-release-unsigned.apk keystorealias
-```
-
-#### View Keystore
-
-```bash
-keytool -list -v -keystore .\app\keystore\release.keystore
-```
-
-#### View Action Logs
-
-```bash
+# View Action Logs
 gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/thesixonenine/ScanQRCode/actions/runs --paginate --jq '.workflow_runs[] | select(.conclusion != "") | .id'
 ```
