@@ -1,6 +1,6 @@
 buildscript {
-    val gradleVersion = "8.7.0"
-    val kotlinVersion = "2.0.0"
+    val gradleVersion = "8.13.0"
+    val kotlinVersion = "2.2.20"
     repositories {
         mavenLocal()
         maven { url = uri("https://maven.aliyun.com/repository/public/") }
