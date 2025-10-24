@@ -1,4 +1,4 @@
-name: Android CI
+name: Release Draft By Tag
 
 on:
   workflow_dispatch:

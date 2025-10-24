@@ -1,4 +1,4 @@
-name: Build CI
+name: Release By Push or PR
 
 on:
   workflow_dispatch:
