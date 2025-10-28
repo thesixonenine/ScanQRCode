@@ -14,6 +14,7 @@ gradlew text eol=lf
 *.xml text eol=lf
 *.yaml text eol=lf
 *.yml text eol=lf
+*.html text eol=lf
 *.md text eol=lf
 *.lock text eol=lf
 .metadata text eol=lf
