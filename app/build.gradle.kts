@@ -8,10 +8,10 @@ plugins {
 
 android {
     namespace = "xyz.thesixonenine.scanqrcode"
-    compileSdk = 34
+    compileSdk = 36
     defaultConfig {
         applicationId = "xyz.thesixonenine.scanqrcode"
-        minSdk = 26
+        minSdk = 22
         versionCode = 1
         versionName = "0.0.3"
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
