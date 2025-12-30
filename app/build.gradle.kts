@@ -26,10 +26,10 @@ android {
     }
     signingConfigs {
         create("release") {
-            storeFile = file("./keystore/release.keystore")
-            storePassword = property("RELEASE_STORE_PASSWORD").toString()
-            keyAlias = property("RELEASE_KEY_ALIAS").toString()
-            keyPassword = property("RELEASE_KEY_PASSWORD").toString()
+            storeFile = file("${System.getProperty("user.home")}/.android/release.keystore")
+            storePassword = System.getenv("RELEASE_STORE_PASSWORD")
+            keyAlias = System.getenv("RELEASE_KEY_ALIAS")
+            keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
         }
     }
     buildTypes {
@@ -50,12 +50,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlin {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+            jvmTarget.set(JvmTarget.JVM_21)
         }
     }
     lint {
