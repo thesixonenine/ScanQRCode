@@ -1,20 +1,18 @@
-import com.android.build.gradle.internal.api.ApkVariantOutputImpl
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = "xyz.thesixonenine.scanqrcode"
+    namespace = "io.github.thesixonenine.scanqrcode"
     compileSdk = 36
     defaultConfig {
-        applicationId = "xyz.thesixonenine.scanqrcode"
-        minSdk = 22
+        applicationId = "io.github.thesixonenine.scanqrcode"
+        minSdk = 26
+        targetSdk = 36
         versionCode = 1
-        versionName = "0.0.4"
-        testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
+        versionName = "0.0.5"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     splits {
         abi {
@@ -34,29 +32,18 @@ android {
     }
     buildTypes {
         getByName("release") {
-            // 加密
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             signingConfig = signingConfigs.getByName("release")
-            // 混淆规则配置
             // proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            applicationVariants.all {
-                val variant = this
-                outputs.all {
-                    if (this is ApkVariantOutputImpl) {
-                        outputFileName = outputFileName.replaceFirst(project.name, project.parent?.name + "-" + variant.versionName, false)
-                    }
-                }
-            }
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
-        }
+    buildFeatures {
+        compose = true
     }
     lint {
         disable += "TypographyFractions"
@@ -65,10 +52,47 @@ android {
     }
 }
 
+base.archivesName.set("${rootProject.name}-${android.defaultConfig.versionName}")
+
+abstract class RenameApkTask : DefaultTask() {
+    @get:InputDirectory
+    abstract val outputDir: DirectoryProperty
+
+    @TaskAction
+    fun execute() {
+        outputDir.get().asFile.listFiles()?.filter { it.extension == "apk" }?.forEach { apk ->
+            val newName = apk.name.replace("-release.apk", ".apk")
+            if (newName != apk.name) {
+                apk.renameTo(File(apk.parentFile, newName))
+            }
+        }
+    }
+}
+
+val renameApk = tasks.register<RenameApkTask>("renameReleaseApk") {
+    outputDir.set(layout.buildDirectory.dir("outputs/apk/release"))
+}
+
+tasks.configureEach {
+    if (name.startsWith("assemble") && name.endsWith("Release")) {
+        finalizedBy(renameApk)
+    }
+}
+
 dependencies {
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation("androidx.appcompat:appcompat:1.7.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
-    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
-    testImplementation("junit:junit:4.13.2")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.zxing.core)
+    implementation(libs.zxing.android.embedded)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
