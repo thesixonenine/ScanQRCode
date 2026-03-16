@@ -8,7 +8,11 @@ Scanning and recognizing QR code, Barcode.
 
 ## Icon
 
-[Link](http://androidasset.studio/icons-launcher.html#foreground.type=clipart&foreground.clipart=center_focus_weak&foreground.space.trim=1&foreground.space.pad=0.25&foreColor=rgb(106%2C%20190%2C%20109)&backColor=rgb(240%2C%20238%2C%20238)&crop=0&backgroundShape=square&effects=elevate&name=ic_launcher)
+
+**androidasset.studio** [Link](http://androidasset.studio/icons-launcher.html#foreground.type=clipart&foreground.clipart=center_focus_weak&foreground.space.trim=1&foreground.space.pad=0.25&foreColor=rgb(106%2C%20190%2C%20109)&backColor=rgb(240%2C%20238%2C%20238)&crop=0&backgroundShape=square&effects=elevate&name=ic_launcher)
+
+
+**icon.kitche** [Link](https://icon.kitchen/i/H4sIAAAAAAAAA0WQwWrDMAyG30W79rAeFliuZffBdhujyPZvx9SJgu20lNJ3r9WU1gf757P4kHShI6cFhfoL-bCTJJl6euvYoHO0IfNi_h3tNObD73lGQzbFmXO9o90jN09Be8jB85L0M1qZtBpTRd57sUvZn8AHuqr_Z-BVFrNNq_6bnYtTUFeVmfrtx4ZyDEPTajRSq4xrTvB3qip2Ac9utw6fpmu6OmCEo95zKlD7l_ewtU1MSDhyhfYxiluSruGPeHJZog4fpbT7BEP_1xsnFJVKKQEAAA)
 
 
 ## Build with PowerShell on Windows
