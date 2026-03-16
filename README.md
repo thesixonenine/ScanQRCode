@@ -6,6 +6,10 @@
 
 Scanning and recognizing QR code, Barcode.
 
+## Icon
+
+[Link](http://androidasset.studio/icons-launcher.html#foreground.type=clipart&foreground.clipart=center_focus_weak&foreground.space.trim=1&foreground.space.pad=0.25&foreColor=rgb(106%2C%20190%2C%20109)&backColor=rgb(240%2C%20238%2C%20238)&crop=0&backgroundShape=square&effects=elevate&name=ic_launcher)
+
 
 ## Build with PowerShell on Windows
 
