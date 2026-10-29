@@ -21,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +35,11 @@ import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import io.github.thesixonenine.scanqrcode.ui.theme.ScanQRCodeTheme
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+private const val CAMERA_PAUSE_TIMEOUT_MS = 10_000L
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,17 +65,50 @@ fun MainScreen() {
     }
     var scanned by remember { mutableStateOf(false) }
     val barcodeView = remember { mutableStateOf<DecoratedBarcodeView?>(null) }
+    val coroutineScope = rememberCoroutineScope()
+    var cameraActive by remember { mutableStateOf(false) }
+
+    fun startCamera() {
+        if (!cameraActive && barcodeView.value != null) {
+            barcodeView.value?.resume()
+            cameraActive = true
+        }
+    }
+
+    fun stopCamera() {
+        if (cameraActive) {
+            barcodeView.value?.pause()
+            cameraActive = false
+        }
+    }
 
     DisposableEffect(context) {
         val lifecycleOwner = context as? LifecycleOwner
+        var timeoutJob: Job? = null
         val observer = lifecycleOwner?.lifecycle?.let { lifecycle ->
             LifecycleEventObserver { _, event ->
-                if (event == Lifecycle.Event.ON_RESUME) {
-                    scanned = false
+                when (event) {
+                    Lifecycle.Event.ON_RESUME -> {
+                        scanned = false
+                        timeoutJob?.cancel()
+                        timeoutJob = null
+                        startCamera()
+                    }
+
+                    Lifecycle.Event.ON_STOP -> {
+                        timeoutJob?.cancel()
+                        timeoutJob = coroutineScope.launch {
+                            delay(CAMERA_PAUSE_TIMEOUT_MS)
+                            stopCamera()
+                        }
+                    }
+
+                    else -> Unit
                 }
             }.also { lifecycle.addObserver(it) }
         }
         onDispose {
+            timeoutJob?.cancel()
             observer?.let { lifecycleOwner.lifecycle.removeObserver(it) }
         }
     }
@@ -116,9 +155,9 @@ fun MainScreen() {
                     modifier = Modifier.fillMaxSize()
                 )
                 DisposableEffect(barcodeView.value) {
-                    barcodeView.value?.resume()
+                    startCamera()
                     onDispose {
-                        barcodeView.value?.pause()
+                        stopCamera()
                     }
                 }
                 Text(
