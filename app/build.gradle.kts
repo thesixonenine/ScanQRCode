@@ -14,14 +14,6 @@ android {
         versionName = "0.0.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            include("x86", "x86_64", "armeabi-v7a", "arm64-v8a")
-            isUniversalApk = true
-        }
-    }
     signingConfigs {
         create("release") {
             storeFile = file("${System.getProperty("user.home")}/.android/release.keystore")
@@ -49,33 +41,6 @@ android {
         disable += "TypographyFractions"
         disable += "TypographyQuotes"
         abortOnError = false
-    }
-}
-
-base.archivesName.set("${rootProject.name}-${android.defaultConfig.versionName}")
-
-abstract class RenameApkTask : DefaultTask() {
-    @get:InputDirectory
-    abstract val outputDir: DirectoryProperty
-
-    @TaskAction
-    fun execute() {
-        outputDir.get().asFile.listFiles()?.filter { it.extension == "apk" }?.forEach { apk ->
-            val newName = apk.name.replace("-release.apk", ".apk")
-            if (newName != apk.name) {
-                apk.renameTo(File(apk.parentFile, newName))
-            }
-        }
-    }
-}
-
-val renameApk = tasks.register<RenameApkTask>("renameReleaseApk") {
-    outputDir.set(layout.buildDirectory.dir("outputs/apk/release"))
-}
-
-tasks.configureEach {
-    if (name.startsWith("assemble") && name.endsWith("Release")) {
-        finalizedBy(renameApk)
     }
 }
 
