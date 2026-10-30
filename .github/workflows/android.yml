@@ -23,12 +23,11 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
     - uses: gradle/actions/setup-gradle@v6
-    - name: Prepare Gradle
+    - name: Remove Mirror
       run: |
         find . -type f -name "*.gradle.kts" -exec sed -i '/aliyun/d' {} +
         find . -type f -name "*.gradle.kts" -exec sed -i '/tencent/d' {} +
         find . -name 'gradle-wrapper.properties' -exec sed -i 's/mirrors\.cloud\.tencent\.com\/gradle/services.gradle.org\/distributions/g' {} +
-        chmod +x ./gradlew
     - name: Build Release
       if: env.IS_FORK_PR != 'true'
       env:
