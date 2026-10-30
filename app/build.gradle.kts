@@ -4,11 +4,8 @@ plugins {
 }
 
 val appVersionName = providers.gradleProperty("versionName").get()
-val appVersionCode = providers.gradleProperty("versionCode").map { it.toInt() }
-    .getOrElse(
-        appVersionName.split(".").map { it.toIntOrNull() ?: 0 }
-            .let { (major, minor, patch) -> major * 1_000_000 + minor * 1_000 + patch },
-    )
+val appVersionCode = providers.gradleProperty("versionCode").get().toInt()
+
 android {
     namespace = "io.github.thesixonenine.scanqrcode"
     compileSdk = 36
