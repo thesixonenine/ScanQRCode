@@ -1,14 +1,13 @@
-name: Release Draft By Tag
+name: Build and Release
 
 on:
   workflow_dispatch:
   push:
     tags:
       - "v*.*.*"
-  # push:
-  #   branches: [ "master" ]
-  # pull_request:
-  #   branches: [ "master" ]
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
 
 jobs:
   build:
